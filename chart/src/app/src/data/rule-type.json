@@ -1,0 +1,8 @@
+{
+  "PASSWORD" : "密码规则",
+  "IP" : "IP地址规则",
+  "DEVICE" : "设备规则",
+  "CITY" : "所在地规则",
+  "IP_PORTRAYAL" : "IP画像",
+  "IMEI_PORTRAYAL" : "IMEI画像"
+}

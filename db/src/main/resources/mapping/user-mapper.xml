@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.UserMapper">
+    <resultMap id="userMap" type="com.bamboocloud.risk.db.entity.User">
+        <result column="ID" property="id"></result>
+        <result column="USERNAME" property="username"></result>
+        <result column="NICK_NAME" property="nickName"></result>
+        <result column="IMG_PATH" property="imgPath"></result>
+        <result column="STATUS" property="status"></result>
+        <result column="EMAIL" property="email"></result>
+        <result column="MOBILE" property="mobile"></result>
+        <result column="CREATE_TIME" property="createTime"></result>
+        <result column="ROLE_ID" property="roleId"></result>
+        <result column="PASSWORD" property="password"></result>
+        <result column="TYPE" property="type"></result>
+        <association property="role"  select="com.bamboocloud.risk.db.mapper.RoleMapper.getById" column="ROLE_ID"/>
+    </resultMap>
+
+    <sql id="select">
+        SELECT ID,
+               USERNAME,
+               NICK_NAME,
+               IMG_PATH,
+               STATUS,
+               EMAIL,
+               MOBILE,
+               CREATE_TIME,
+               ROLE_ID,
+               TYPE
+          FROM T_USER
+    </sql>
+
+    <select id="getById" resultMap="userMap">
+        SELECT ID,
+               USERNAME,
+               NICK_NAME,
+               IMG_PATH,
+               STATUS,
+               EMAIL,
+               MOBILE,
+               <if test="withPassword == true">
+               PASSWORD,
+               </if>
+               CREATE_TIME,
+               ROLE_ID,
+               TYPE
+          FROM T_USER
+         WHERE ID = #{id}
+    </select>
+
+    <select id="getByUsernamePassword" resultMap="userMap">
+        <include refid="select"></include>
+         WHERE USERNAME = #{username}
+           AND PASSWORD = #{password}
+           AND STATUS = 'NORMAL'
+    </select>
+
+    <select id="queryForList" parameterType="map" resultMap="userMap" databaseId="mysql">
+        <include refid="select"></include>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="null != username">
+                    AND USERNAME LIKE CONCAT("%",#{username},"%")
+                </if>
+                <if test="null != nickName">
+                    AND NICK_NAME LIKE CONCAT("%",#{nickName},"%")
+                </if>
+                <if test="null != status">
+                    AND STATUS = #{status}
+                </if>
+                <if test="null != email">
+                    AND EMAIL LIKE CONCAT("%",#{email},"%")
+                </if>
+                <if test="null != mobile">
+                    AND MOBILE LIKE CONCAT("%",#{mobile},"%")
+                </if>
+                <if test="null != startTime">
+                    AND CREATE_TIME &gt;= #{startTime}
+                </if>
+                <if test="null != endTime">
+                    AND CREATE_TIME &lt;= #{endTime}
+                </if>
+                AND TYPE = 1
+            </trim>
+        </where>
+    </select>
+
+    <select id="queryForList" parameterType="map" resultMap="userMap" databaseId="oracle">
+        <include refid="select"></include>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="null != username">
+                    AND USERNAME LIKE '%'||#{username}||'%'
+                </if>
+                <if test="null != nickName">
+                    AND NICK_NAME LIKE '%'||#{nickName}||'%'
+                </if>
+                <if test="null != status">
+                    AND STATUS = #{status}
+                </if>
+                <if test="null != email">
+                    AND EMAIL LIKE '%'||#{email}||'%'
+                </if>
+                <if test="null != mobile">
+                    AND MOBILE LIKE '%'||#{mobile}||'%'
+                </if>
+                <if test="null != startTime">
+                    AND CREATE_TIME &gt;= #{startTime}
+                </if>
+                <if test="null != endTime">
+                    AND CREATE_TIME &lt;= #{endTime}
+                </if>
+                AND TYPE = 1
+            </trim>
+        </where>
+    </select>
+
+    <select id="getCountByUsername" parameterType="String" resultType="int">
+        SELECT COUNT(id)
+          FROM T_USER
+         WHERE USERNAME = #{username}
+    </select>
+
+    <select id="getCountByRoleId" resultType="int" parameterType="int">
+        SELECT COUNT(id)
+          FROM T_USER
+         WHERE ROLE_ID = #{roleId}
+    </select>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.User" databaseId="mysql">
+        INSERT INTO T_USER (USERNAME,PASSWORD,NICK_NAME,IMG_PATH,STATUS,EMAIL,MOBILE,CREATE_TIME,ROLE_ID , TYPE)
+             VALUES (#{username},#{password},#{nickName},#{imgPath, jdbcType=VARCHAR},#{status},#{email},#{mobile},now(),#{roleId} , #{type})
+    </insert>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.User" databaseId="oracle">
+        INSERT INTO T_USER (ID,USERNAME,PASSWORD,NICK_NAME,IMG_PATH,STATUS,EMAIL,MOBILE,CREATE_TIME,ROLE_ID , TYPE)
+             VALUES (T_USER_ID_SEQ.NEXTVAL,#{username},#{password},#{nickName},#{imgPath, jdbcType=VARCHAR},#{status},#{email},#{mobile},SYSDATE,#{roleId , jdbcType=INTEGER} , #{type})
+    </insert>
+
+    <update id="update" parameterType="com.bamboocloud.risk.db.entity.User">
+        UPDATE T_USER
+        <set>
+            <trim suffixOverrides=",">
+                <if test="null != username">
+                  USERNAME = #{username},
+                </if>
+                <if test="null != nickName">
+                  NICK_NAME = #{nickName},
+                </if>
+                <if test="null != password">
+                    PASSWORD = #{password},
+                </if>
+                <if test="null != imgPath">
+                  IMG_PATH = #{imgPath , jdbcType=VARCHAR},
+                </if>
+                <if test="null != status">
+                  STATUS = #{status},
+                </if>
+                <if test="null != email">
+                  EMAIL = #{email},
+                </if>
+                <if test="null != mobile">
+                  MOBILE = #{mobile},
+                </if>
+                <if test="null != roleId">
+                  ROLE_ID = #{roleId}
+                </if>
+            </trim>
+        </set>
+        WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM T_USER WHERE ID = #{id}
+    </delete>
+
+    <update id="updateRole" parameterType="int">
+        UPDATE T_USER
+           SET ROLE_ID = NULL
+         WHERE ROLE_ID = #{roleId}
+    </update>
+</mapper>

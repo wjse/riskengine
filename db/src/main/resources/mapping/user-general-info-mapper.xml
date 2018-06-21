@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.UserGeneralInfoMapper">
+    <resultMap id="infoMap" type="com.bamboocloud.risk.db.entity.UserGeneralInfo">
+        <result column="ID" property="id"></result>
+        <result column="USER_ID" property="userId"></result>
+        <result column="TYPE" property="type"></result>
+        <result column="VALUE" property="value"></result>
+    </resultMap>
+    <select id="queryForList" parameterType="map" resultMap="infoMap">
+      SELECT *
+        FROM T_USER_GENERAL_INFO
+      <where>
+          <trim prefixOverrides="AND || OR">
+            <if test="type != null">
+             AND TYPE = #{type}
+            </if>
+            <if test="userId != null">
+             AND USER_ID = #{userId}
+            </if>
+          </trim>
+      </where>
+    </select>
+</mapper>

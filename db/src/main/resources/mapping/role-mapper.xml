@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.RoleMapper">
+
+    <select id="getById" parameterType="int" resultType="com.bamboocloud.risk.db.entity.Role">
+        SELECT ID id,
+               NAME name
+          FROM T_ROLE
+         WHERE ID = #{id}
+    </select>
+
+    <select id="queryForList" resultType="com.bamboocloud.risk.db.entity.Role">
+        SELECT ID id,
+               NAME name
+          FROM T_ROLE
+    </select>
+
+    <insert id="save" keyProperty="id" parameterType="com.bamboocloud.risk.db.entity.Role" databaseId="mysql">
+        <selectKey resultType="int" order="AFTER" keyProperty="id">
+            SELECT LAST_INSERT_ID() as id
+        </selectKey>
+        INSERT INTO T_ROLE(NAME) VALUES (#{name})
+    </insert>
+
+    <insert id="save" keyProperty="id" parameterType="com.bamboocloud.risk.db.entity.Role" databaseId="oracle">
+        <selectKey resultType="int" order="BEFORE" keyProperty="id">
+            SELECT T_ROLE_ID_SEQ.NEXTVAL as id from DUAL
+        </selectKey>
+        INSERT INTO T_ROLE(ID,NAME) VALUES (#{id} , #{name})
+    </insert>
+
+    <insert id="saveRoleMenu" parameterType="list" databaseId="mysql">
+        INSERT INTO T_ROLE_MENU (ROLE_ID , MENU_ID)
+        VALUES
+        <foreach collection="list" item="menu" separator=",">
+            (#{menu.roleId} , #{menu.id})
+        </foreach>
+    </insert>
+
+    <insert id="saveRoleMenu" parameterType="list" databaseId="oracle">
+        INSERT INTO T_ROLE_MENU (ROLE_ID , MENU_ID)
+        <foreach collection="list" item="menu" separator="union all">
+            SELECT #{menu.roleId} ,
+            #{menu.id}
+            FROM DUAL
+        </foreach>
+    </insert>
+
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM T_ROLE WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteRoleMenu" parameterType="int">
+        DELETE FROM T_ROLE_MENU WHERE ROLE_ID = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.bamboocloud.risk.db.entity.Role">
+        UPDATE T_ROLE
+           SET NAME = #{name}
+         WHERE ID= #{id}
+    </update>
+
+    <select id="getCountByName" parameterType="string" resultType="int">
+        SELECT COUNT(ID)
+          FROM T_ROLE
+         WHERE NAME = #{name}
+    </select>
+</mapper>

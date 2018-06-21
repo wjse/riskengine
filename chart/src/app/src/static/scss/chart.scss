@@ -1,0 +1,98 @@
+@import "main";
+.chart{
+
+  .row{
+    z-index: 1;
+  }
+
+  .panel{
+    .actions {
+      position: absolute;
+      right: 30px;
+      top: 15px;
+
+      .btn {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .well{
+    .button-group{
+      text-align: center;
+      padding-right : 4%;
+
+      .btn{
+        width: 80px;
+      }
+
+      .btn-primary{
+        margin-left : 20px;
+      }
+    }
+  }
+
+  .chart-body{
+    height: 500px;
+  }
+
+  .type-imgs{
+    margin-top : 15px;
+    width : 100%;
+    padding-left : 85px;
+
+    li:first-child,li:last-child{
+      line-height: 100px;
+    }
+
+    li:nth-child(2){
+      margin-left: 33px;
+    }
+
+    li{
+      float: left;
+      list-style: none;
+      cursor: pointer;
+      margin-left: 100px;
+
+      .active{
+        border : 1px solid #1abc9c;
+      }
+    }
+  }
+
+  .form-group{
+    .control-label{
+      text-align: right;
+    }
+  }
+
+  .chart-axis{
+      height:250px;
+  }
+
+  .chart-series{
+    .series{
+      height:230px;
+      width: 90%;
+      border : 1px solid #d1cfd4;
+      border-radius: 5px;
+      margin : 10px auto;
+      padding : 30px 0;
+
+      .button-group{
+        text-align: center;
+        padding-right: 40px;
+
+        .btn{
+          margin : 0 10px;
+        }
+      }
+    }
+  }
+
+  #goBack{
+    float: right;
+    margin-top: -25px;
+  }
+}

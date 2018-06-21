@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+       <context:annotation-config/>
+       <aop:aspectj-autoproxy/>
+       <context:component-scan base-package="com.bamboocloud.risk.db">
+              <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+       </context:component-scan>
+
+       <bean id="jdbcProperties" class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer">
+              <property name="location" value="classpath:jdbc.properties"></property>
+              <property name="ignoreUnresolvablePlaceholders" value="true"/>
+       </bean>
+
+       <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+              <property name="driverClassName" value="${jdbc.driverClassName}"/>
+              <property name="url" value="${jdbc.url}"/>
+              <property name="username" value="${jdbc.username}"/>
+              <property name="password" value="${jdbc.password}"/>
+              <property name="maxActive" value="${jdbc.maxActive}"/>
+              <property name="maxIdle" value="${jdbc.maxIdle}"/>
+              <property name="minIdle" value="${jdbc.minIdle}"/>
+              <property name="maxWait" value="${jdbc.maxWait}"/>
+              <property name="testOnBorrow" value="${jdbc.testOnBorrow}"/>
+              <property name="testOnReturn" value="${jdbc.testOnReturn}"/>
+              <property name="testWhileIdle" value="${jdbc.testWhileIdle}"/>
+              <property name="validationQuery" value="${jdbc.validationQuery}"/>
+              <property name="logAbandoned" value="${jdbc.logAbandoned}"/>
+              <property name="removeAbandoned" value="${jdbc.removeAbandoned}"/>
+              <property name="removeAbandonedTimeout" value="${jdbc.removeAbandonedTimeout}"/>
+              <property name="timeBetweenEvictionRunsMillis" value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+       </bean>
+
+       <bean id="databaseIdProvider" class="org.apache.ibatis.mapping.VendorDatabaseIdProvider">
+              <property name="properties">
+                     <props>
+                            <prop key="Oracle">oracle</prop>
+                            <prop key="Mysql">mysql</prop>
+                     </props>
+              </property>
+       </bean>
+
+       <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+              <property name="dataSource" ref="dataSource"/>
+              <property name="mapperLocations">
+                  <list>
+                      <value>classpath*:mapping/*-mapper.xml</value>
+                  </list>
+              </property>
+              <property name="configLocation" value="classpath:mapper-config.xml"></property>
+              <property name="databaseIdProvider" ref="databaseIdProvider"></property>
+              <property name="plugins">
+                     <array>
+                            <bean class="com.github.pagehelper.PageInterceptor">
+                                   <property name="properties">
+                                          <value>
+                                                 reasonable=true
+                                                 pageNum>pages=true
+                                          </value>
+                                   </property>
+                            </bean>
+                     </array>
+              </property>
+       </bean>
+       <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+              <property name="basePackage" value="com.bamboocloud.risk.db.mapper"></property>
+              <property name="annotationClass" value="org.apache.ibatis.annotations.Mapper"></property>
+              <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+       </bean>
+
+
+       <tx:annotation-driven/>
+       <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+              <property name="dataSource" ref="dataSource" />
+       </bean>
+
+       <tx:advice id="advice">
+              <tx:attributes>
+                     <tx:method name="save*"/>
+                     <tx:method name="insert*"/>
+                     <tx:method name="add*"/>
+                     <tx:method name="update*"/>
+                     <tx:method name="mod*"/>
+                     <tx:method name="del*"/>
+                     <tx:method name="remove*"/>
+              </tx:attributes>
+       </tx:advice>
+
+       <aop:config>
+              <aop:pointcut id="pointcut" expression="execution (* com.bamboocloud.risk.*.service.*.*(..))"/>
+              <aop:advisor advice-ref="advice" pointcut-ref="pointcut"/>
+       </aop:config>
+</beans>

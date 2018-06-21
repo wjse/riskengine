@@ -1,0 +1,9 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "v2.0",
+    "title" : "Risk engine RESTFul API"
+  },
+  "basePath" : "/api",
+  "schemes" : [ "http" ]
+}

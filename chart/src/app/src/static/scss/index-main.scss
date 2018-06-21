@@ -1,0 +1,133 @@
+@import "main";
+
+.main-content-wrapper {
+  margin-left: 240px;
+  margin-right: 0;
+  -webkit-transition:all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  background: #f1f2f7;
+  min-height: 1000px;
+  overflow: auto;
+
+  #main-content{
+    border-top: solid thin #e7e8ec;
+    display: inline-block;
+    padding: 15px 15px 0;
+    width: 100%;
+
+    .h1{
+      margin: 0;
+      padding: 0 10px 40px;
+      float: left;
+      line-height: 10px;
+      font-weight: 300;
+      font-size: 42px;
+      font-family: 'Source Sans Pro',Arial,sans-serif;
+    }
+
+    .dashboard-title{
+      background-color: #fff;
+      color: #555;
+      margin-bottom: 15px;
+      padding: 10px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      -ms-border-radius: 3px;
+      -o-border-radius: 3px;
+      border-radius: 3px;
+
+      .content{
+        padding: 10px;
+
+        h1{
+          margin: 0;
+          font-weight: 300;
+          font-size: 40px;
+          padding: 8px;
+        }
+      }
+    }
+
+
+    .title-turquoise {
+      background-color: #1abc9c;
+      color: #fff
+    }
+
+    .title-red {
+      background-color: #e84c3d;
+      color: #fff
+    }
+
+    .title-blue {
+      background-color: #3598db;
+      color: #fff
+    }
+
+    .title-purple {
+      background-color: #9a59b5;
+      color: #fff
+    }
+
+    .detail{
+      .icon{
+        position: absolute;
+        display: block;
+        float: right;
+        height: 80px;
+        margin-bottom: 10px;
+        padding-left: 15px;
+        padding-top: 10px;
+        width: 80px;
+        right: 40px;
+        bottom: 9px;
+
+        i{
+          color: rgba(0,0,0,.05);
+          font-size: 85px;
+          line-height: 65px
+        }
+      }
+
+      .content{
+        background: 0 0;
+        padding: 10px 10px 13px;
+        display: inline-block;
+        position: relative;
+        //z-index: 5;
+
+        p{
+          margin-bottom: 0;
+          padding: 10px;
+          font-weight: 400;
+          font-size: 14px;
+          clear: both
+        }
+      }
+    }
+  }
+}
+
+.main-content-toggle-left {
+  margin-left: 0;
+}
+
+@media only screen and (max-width:660px) {
+  .main-content-wrapper {
+    margin-left: 0
+  }
+}
+
+@media only screen and (max-width:767px) and (min-width:480px) {
+  #main-content .h1 {
+    font-size: 35px
+  }
+}
+
+@media only screen and (max-width:479px) {
+  #main-content .h1 {
+    font-size: 22px
+  }
+}

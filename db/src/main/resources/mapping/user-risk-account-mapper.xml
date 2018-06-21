@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.UserRiskAccountMapper">
+
+    <select id="queryUserRiskAccount" resultType="int">
+      SELECT COUNT(*)
+        FROM T_USER_RISK_ACCOUNT
+      WHERE USER_ID = #{userId}
+    </select>
+
+    <delete id="deleteUserRisk">
+        DELETE
+          FROM T_USER_RISK_ACCOUNT
+        WHERE USER_ID = #{userId}
+    </delete>
+</mapper>

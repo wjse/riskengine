@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.DynamicQuerySqlMapper">
+    <resultMap id="resultMap" type="com.bamboocloud.risk.db.entity.DynamicQuerySql">
+        <result column="ID" property="id"></result>
+        <result column="SQL_NAME" property="name"></result>
+        <result column="USED" property="used"></result>
+        <result column="COLUMNS" property="columns"></result>
+        <result column="TABLE_NAME" property="tableName"></result>
+        <result column="CONDITIONS" property="conditions"></result>
+        <result column="GROUP_BY" property="groupBy"></result>
+        <result column="HAVING_STR" property="having"></result>
+        <result column="ORDER_BY" property="orderBy"></result>
+        <result column="SQL_STR" property="sqlString"></result>
+        <result column="DATA_SOURCE_ID" property="dataSourceId"></result>
+        <result column="CHART_ID" property="chartId"></result>
+        <result column="MODULE" property="module"></result>
+        <result column="CREATOR" property="creator"></result>
+        <result column="CREATE_TIME" property="createTime"></result>
+        <association property="dataSource"  select="com.bamboocloud.risk.db.mapper.DynamicDataSourceMapper.get" column="DATA_SOURCE_ID"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.DynamicQuerySql" databaseId="oracle">
+        INSERT INTO T_DYNAMIC_QUERY_SQL (ID , SQL_NAME , USED, COLUMNS , TABLE_NAME ,
+                                         CONDITIONS , GROUP_BY , HAVING_STR , ORDER_BY, SQL_STR,
+                                         DATA_SOURCE_ID , CHART_ID, MODULE, CREATOR , CREATE_TIME)
+             VALUES (T_DYNAMIC_QUERY_SQL_SEQ.NEXTVAL , #{name} , #{used}, #{columns} , #{tableName} ,
+                     #{conditions} , #{groupBy} , #{having} , #{orderBy} , #{sqlString} ,
+                     #{dataSourceId}, #{chartId} , #{module} , #{creator} , #{createTime})
+    </insert>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.DynamicQuerySql" databaseId="mysql">
+        INSERT INTO T_DYNAMIC_QUERY_SQL (SQL_NAME , USED , COLUMNS , TABLE_NAME ,
+                                         CONDITIONS , GROUP_BY , HAVING_STR , ORDER_BY, SQL_STR,
+                                         DATA_SOURCE_ID , CHART_ID, CREATOR , CREATE_TIME)
+             VALUES (#{name} , #{used} ,#{columns} , #{tableName} ,
+                     #{conditions} , #{groupBy} , #{having} , #{orderBy} , #{sqlString} ,
+                     #{dataSourceId}, #{chartId}, #{module} , #{creator} , #{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.bamboocloud.risk.db.entity.DynamicQuerySql">
+        UPDATE T_DYNAMIC_QUERY_SQL
+           SET SQL_NAME = #{name},
+               COLUMNS = #{columns},
+               TABLE_NAME = #{tableName},
+               CONDITIONS = #{conditions},
+               GROUP_BY = #{groupBy},
+               HAVING_STR= #{having},
+               ORDER_BY = #{orderBy},
+               SQL_STR = #{sqlString},
+               DATA_SOURCE_ID = #{dataSourceId}
+         WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM T_DYNAMIC_QUERY_SQL
+              WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteByChartAndModule">
+        DELETE FROM T_DYNAMIC_QUERY_SQL
+              WHERE CHART_ID = #{chartId}
+                AND MODULE = #{module}
+    </delete>
+
+    <delete id="deleteByChart" parameterType="String">
+        DELETE FROM T_DYNAMIC_QUERY_SQL
+              WHERE CHART_ID = #{chartId}
+    </delete>
+
+    <sql id="select">
+         SELECT *
+           FROM T_DYNAMIC_QUERY_SQL
+    </sql>
+
+    <select id="get" parameterType="int" resultMap="resultMap">
+        <include refid="select"/>
+         WHERE ID = #{id}
+    </select>
+
+    <select id="getByChart" resultMap="resultMap">
+        <include refid="select"/>
+        WHERE CHART_ID = #{chartId}
+          AND MODULE = #{module}
+    </select>
+
+    <select id="queryForList" resultMap="resultMap" parameterType="map" databaseId="mysql">
+        <include refid="select"/>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="chartId != null">
+                    AND CHART_ID = #{chartId}
+                </if>
+                <if test="module != null">
+                    AND MODULE = #{module}
+                </if>
+                <if test="moduleLike != null">
+                    AND MODULE LIKE CONCAT ("%" , #{moduleLike} , "%")
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="queryForList" resultMap="resultMap" parameterType="map" databaseId="oracle">
+        <include refid="select"/>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="chartId != null">
+                    AND CHART_ID = #{chartId}
+                </if>
+                <if test="module != null">
+                    AND MODULE = #{module}
+                </if>
+                <if test="moduleLike != null">
+                    AND MODULE LIKE '%'||#{moduleLike}||'%'
+                </if>
+            </trim>
+        </where>
+    </select>
+
+    <select id="getCountByDataSource" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+          FROM T_DYNAMIC_QUERY_SQL
+         WHERE DATA_SOURCE_ID = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,206 @@
+@import "main";
+
+#header{
+  z-index: 200;
+  background: #fff;
+  min-height: 80px;
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  margin-right: 0;
+
+  .brand{
+    float: left;
+    width: 240px;
+    min-height: 80px;
+    padding: 0 0 0 10px;
+    position: relative;
+    background: #1abc9c url("../img/logo.png") no-repeat 25px 26px;
+  }
+
+  .logo{
+    color: #fff;
+    font-size: 1.7em;
+    text-transform: uppercase;
+    padding: 23px 0 0 63px;
+    display: inline-block;
+
+    span{
+      font-weight: 700;
+    }
+  }
+
+  .toggle-navigation button:active,#header .toggle-navigation button:hover,#header button#toggle-mail:active,#header button#toggle-mail:hover {
+    background: #1abc9c;
+  }
+
+  .toggle-navigation button:hover i,#header button#toggle-mail:hover i {
+    color: #F6F6F6;
+  }
+
+  .toggle-navigation.toggle-left {
+    margin: 23px 0 0 20px;
+    display: inline-block;
+
+    .fa-bars{
+      margin-top: 7px;
+    }
+  }
+
+  .btn-default {
+    padding: 3px 9px;
+    background: #F6F6F6;
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    width: 35px;
+    height: 35px;
+  }
+
+  .btn-default .fa-bars,.btn-default .fa-comment {
+    cursor: pointer;
+    color: #797979;
+  }
+
+  .user-nav ul li.dropdown.settings {
+    line-height: 39px;
+    margin-right: 20px;
+    padding: 0 20px;
+  }
+
+  .user-nav {
+    float: right;
+    padding-top: 15px;
+    padding-right: 45px;
+
+    .fa{
+      margin-right : 15px;
+    }
+
+    ul li{
+      display: inline-block;
+      vertical-align: middle;
+      font-size: 15px;
+      cursor: pointer;
+
+      .profile-photo {
+        display: inline-block;
+        overflow: hidden;
+        vertical-align: middle;
+      }
+
+      .dropdown.settings .dropdown-menu {
+        width: 125px;
+      }
+
+      .dropdown.settings .dropdown-menu>li>a {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+
+      .dropdown.settings .dropdown-menu {
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        -ms-border-radius: 3px;
+        -o-border-radius: 3px;
+        border-radius: 3px;
+        left: -20px;
+        top: 48px;
+        background-color: #F6F6F6;
+        border-color: #e7e8ec;
+        -webkit-box-shadow: 0 0 5px rgba(0,0,0,.1);
+        -moz-box-shadow: 0 0 5px rgba(0,0,0,.1);
+        -o-box-shadow: 0 0 5px rgba(0,0,0,.1);
+        box-shadow: 0 0 5px rgba(0,0,0,.1);
+      }
+
+      .dropdown.settings .dropdown-menu:after {
+        bottom: 100%;
+        left: 78%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(238,238,238,0);
+        border-bottom-color: #F6F6F6;
+        border-width: 8px;
+        margin-left: -8px;
+      }
+
+      .dropdown.settings .dropdown-menu:before {
+        bottom: 100%;
+        left: 78%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+        border-color: rgba(238,238,238,0);
+        border-bottom-color: #e7e8ec;
+        border-width: 8px;
+        margin-left: -8px;
+        top: -17px;
+      }
+
+      .dropdown.settings .dropdown-menu>li>a:active,.dropdown.settings .dropdown-menu>li>a:hover {
+        background-color: #16a086;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .dropdown.settings .dropdown-menu>li>a:hover{
+        background-color: #fff;
+        color: #1abc9c
+      }
+
+      #nickName{
+        display: inline-block;
+        width : 120px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+      }
+
+      a:link,a:visited {
+        text-decoration: none;
+        outline: 0;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width:660px) {
+  #header {
+    height: 160px
+  }
+
+  #header .brand {
+    width: 100%
+  }
+
+  #header .user-nav ul {
+    padding-left: 0
+  }
+
+  #header .toggle-navigation.toggle-left {
+    float: left
+  }
+
+  .user-nav ul li {
+    font-size: 12px
+  }
+}
+
+.profile-img , .updatePassword{
+  padding-top : 20px;
+  padding-bottom : 20px;
+  padding-left: 30px;
+}
+
+#updatePassword,#base{
+  padding-top : 20px;
+}

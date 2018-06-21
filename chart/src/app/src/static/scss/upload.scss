@@ -1,0 +1,14 @@
+@import "main";
+
+.upload{
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+
+  .preview{
+    width : 150px;
+    height : 120px;
+    border: 1px dotted;
+    margin : 0 auto;
+  }
+}

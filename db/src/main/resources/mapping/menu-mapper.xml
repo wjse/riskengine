@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.MenuMapper">
+    <resultMap id="menuMap" type="com.bamboocloud.risk.db.entity.Menu">
+        <result column="ID" property="id"></result>
+        <result column="NAME" property="name"></result>
+        <result column="PATH" property="path"></result>
+        <result column="ICON" property="icon"></result>
+        <result column="HAS_CHILDREN" property="hasChildren"></result>
+        <result column="TYPE" property="type"></result>
+        <result column="TARGET" property="target"></result>
+        <result column="PARENT_ID" property="parentId"></result>
+        <result column="ROLE_ID" property="roleId"></result>
+        <association property="children"  select="queryChildren" column="{roleId=ROLE_ID,parentId=id}"></association>
+    </resultMap>
+
+    <select id="queryChildren" parameterType="map" resultMap="menuMap">
+        SELECT ID,
+               NAME,
+               PATH,
+               ICON,
+               HAS_CHILDREN,
+               TYPE,
+               TARGET,
+               PARENT_ID,
+               SORT
+               <if test="null != roleId">
+                ,${roleId} AS ROLE_ID
+               </if>
+                <if test="null == roleId">
+                    ,null AS ROLE_ID
+                </if>
+          FROM T_MENU
+         WHERE PARENT_ID = #{parentId}
+         <if test="null != roleId">
+           AND ID IN (
+             SELECT MENU_ID
+               FROM T_ROLE_MENU
+             WHERE ROLE_ID = #{roleId}
+          )
+         </if>
+        ORDER BY SORT
+    </select>
+
+    <select id="getById" parameterType="int" resultType="com.bamboocloud.risk.db.entity.Menu">
+        SELECT ID id,
+               NAME name,
+               PATH path,
+               ICON icon,
+               HAS_CHILDREN hasChildren,
+               TYPE type,
+               TARGET target,
+               PARENT_ID parentId,
+               SORT sort
+          FROM T_MENU
+         WHERE ID = #{id}
+    </select>
+
+    <select id="queryForList" parameterType="map" resultMap="menuMap" databaseId="mysql">
+        SELECT ID,
+               NAME,
+               PATH,
+               ICON,
+               HAS_CHILDREN,
+               TYPE,
+               TARGET,
+               PARENT_ID,
+               SORT
+          <if test="null != roleId">
+               ,${roleId} AS ROLE_ID
+          </if>
+          <if test="null == roleId">
+              ,null AS ROLE_ID
+          </if>
+          FROM T_MENU
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="null != name">
+                  AND NAME LIKE CONCAT("%",#{name},"%")
+                </if>
+                <if test="null != type">
+                    AND TYPE = #{type}
+                </if>
+                <if test="null != isParent">
+                    AND (
+                        PARENT_ID IS NULL
+                        OR PARENT_ID = 0
+                    )
+                </if>
+                <if test="null != roleId">
+                    AND ID IN (
+                        SELECT MENU_ID
+                          FROM T_ROLE_MENU
+                         WHERE ROLE_ID = #{roleId}
+                    )
+                </if>
+                <if test="null != parentId">
+                    AND PARENT_ID = #{parentId}
+                </if>
+            </trim>
+        </where>
+        ORDER BY SORT
+    </select>
+
+    <select id="queryForList" parameterType="map" resultMap="menuMap" databaseId="oracle">
+        SELECT ID,
+        NAME,
+        PATH,
+        ICON,
+        HAS_CHILDREN,
+        TYPE,
+        TARGET,
+        PARENT_ID,
+        SORT
+        <if test="null != roleId">
+            ,${roleId} AS ROLE_ID
+        </if>
+        <if test="null == roleId">
+            ,null AS ROLE_ID
+        </if>
+        FROM T_MENU
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="null != name">
+                    AND NAME LIKE '%'||#{name}||'%'
+                </if>
+                <if test="null != type">
+                    AND TYPE = #{type}
+                </if>
+                <if test="null != isParent">
+                    AND (
+                    PARENT_ID IS NULL
+                    OR PARENT_ID = 0
+                    )
+                </if>
+                <if test="null != roleId">
+                    AND ID IN (
+                    SELECT MENU_ID
+                    FROM T_ROLE_MENU
+                    WHERE ROLE_ID = #{roleId}
+                    )
+                </if>
+                <if test="null != parentId">
+                    AND PARENT_ID = #{parentId}
+                </if>
+            </trim>
+        </where>
+        ORDER BY SORT
+    </select>
+
+    <select id="getCountByName" parameterType="string" resultType="int">
+        SELECT COUNT(ID)
+          FROM T_MENU
+         WHERE NAME = #{name}
+    </select>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.Menu" databaseId="mysql">
+        INSERT INTO T_MENU (NAME,PATH,ICON,HAS_CHILDREN,TYPE,TARGET,PARENT_ID , SORT)
+             VALUES (#{name} , #{path} , #{icon} , #{hasChildren} , #{type} , #{target}, #{parentId} , #{sort})
+    </insert>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.Menu" databaseId="oracle">
+        INSERT INTO T_MENU (ID,NAME,PATH,ICON,HAS_CHILDREN,TYPE,TARGET,PARENT_ID , SORT)
+             VALUES (T_MENU_ID_SEQ.NEXTVAL,#{name} , #{path} , #{icon} , #{hasChildren} , #{type} ,#{target} , #{parentId , jdbcType = INTEGER} , #{sort})
+    </insert>
+
+    <update id="update" parameterType="com.bamboocloud.risk.db.entity.Menu">
+        UPDATE T_MENU
+        <set>
+            NAME = #{name},
+            PATH = #{path},
+            ICON = #{icon},
+            HAS_CHILDREN = #{hasChildren},
+            TYPE = #{type},
+            TARGET = #{target},
+            PARENT_ID = #{parentId , jdbcType=INTEGER},
+            SORT = #{sort}
+        </set>
+         WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM T_MENU
+              WHERE ID = #{id}
+    </delete>
+
+    <delete id="deleteRoleMenu" parameterType="int">
+        DELETE FROM T_ROLE_MENU
+              WHERE MENU_ID = #{id}
+    </delete>
+</mapper>

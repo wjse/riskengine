@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+                           http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+       <context:component-scan base-package="com.bamboocloud.risk.chart.web.controller">
+              <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController"/>
+       </context:component-scan>
+       <aop:aspectj-autoproxy expose-proxy="true"/>
+
+       <mvc:annotation-driven>
+              <mvc:message-converters>
+                     <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                            <property name="defaultCharset" value="utf-8"></property>
+                     </bean>
+                     <bean class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                            <property name="defaultCharset" value="utf-8"></property>
+                            <property name="supportedMediaTypes">
+                                   <list>
+                                          <value>application/json</value>
+                                          <value>text/html;charset=UTF-8</value>
+                                   </list>
+                            </property>
+                            <property name="features">
+                                   <list>
+                                          <!-- 禁止循环引用同一对象地址 -->
+                                          <value>DisableCircularReferenceDetect</value>
+                                   </list>
+                            </property>
+                     </bean>
+              </mvc:message-converters>
+       </mvc:annotation-driven>
+
+       <mvc:default-servlet-handler/>
+
+       <mvc:interceptors>
+              <mvc:interceptor>
+                     <mvc:mapping path="/**"/>
+                     <mvc:exclude-mapping path="/login"/>
+                     <mvc:exclude-mapping path="/dynamic/chart/data/**"/>
+                     <mvc:exclude-mapping path="/html/*.html"/>
+                     <bean class="com.bamboocloud.risk.chart.web.filter.AuthInterceptor"></bean>
+              </mvc:interceptor>
+       </mvc:interceptors>
+
+       <mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+
+       <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter"></bean>
+       <bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter" />
+
+       <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+              <property name="suffix" value=".jsp"></property>
+              <property name="prefix" value="/WEB-INF/"></property>
+       </bean>
+
+       <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+</beans>

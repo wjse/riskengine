@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.DynamicChartMapper">
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.DynamicChart">
+        INSERT INTO T_DYNAMIC_CHART (ID , TYPE ,STATUS , TEXT, X_AXIS , Y_AXIS , SERIES ,HTML_ID , HTML_URL, CREATOR , CREATE_TIME)
+             VALUES (#{id} , #{type} , #{status} , #{text} , #{xAxis} , #{yAxis} ,#{series}, #{htmlId} , #{htmlUrl}, #{creator} , #{createTime})
+    </insert>
+
+    <update id="update" parameterType="com.bamboocloud.risk.db.entity.DynamicChart">
+        UPDATE T_DYNAMIC_CHART
+           SET STATUS = #{status},
+               TYPE = #{type},
+               TEXT = #{text},
+               X_AXIS = #{xAxis},
+               Y_AXIS = #{yAxis},
+               SERIES = #{series},
+               HTML_ID = #{htmlId},
+               HTML_URL = #{htmlUrl}
+         WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM T_DYNAMIC_CHART
+              WHERE ID = #{id}
+    </delete>
+
+    <sql id="select">
+        SELECT ID ,
+               TYPE,
+               STATUS ,
+               TEXT,
+               X_AXIS xAxis,
+               Y_AXIS yAxis,
+               SERIES,
+               HTML_ID htmlId,
+               HTML_URL htmlUrl,
+               CREATOR ,
+               CREATE_TIME createTime
+          FROM T_DYNAMIC_CHART
+    </sql>
+
+    <select id="get" parameterType="String" resultType="com.bamboocloud.risk.db.entity.DynamicChart">
+        <include refid="select"></include>
+         WHERE ID = #{id}
+    </select>
+
+    <select id="queryForList" parameterType="map" resultType="com.bamboocloud.risk.db.entity.DynamicChart" databaseId="mysql">
+        <include refid="select"></include>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="null != status">
+                    AND STATUS = #{status}
+                </if>
+                <if test="null != type">
+                    AND TYPE = #{type}
+                </if>
+                <if test="null != text">
+                    AND TEXT LIKE CONCAT ("%" , #{text} , "%")
+                </if>
+            </trim>
+        </where>
+        ORDER BY CREATE_TIME DESC
+    </select>
+
+    <select id="queryForList" parameterType="map" resultType="com.bamboocloud.risk.db.entity.DynamicChart" databaseId="oracle">
+        <include refid="select"></include>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="null != status">
+                    AND STATUS = #{status}
+                </if>
+                <if test="null != type">
+                    AND TYPE = #{type}
+                </if>
+                <if test="null != text">
+                    AND TEXT LIKE '%'||#{text}||'%'
+                </if>
+            </trim>
+        </where>
+        ORDER BY CREATE_TIME DESC
+    </select>
+
+    <select id="getCountById" parameterType="String" resultType="int">
+        SELECT COUNT(ID)
+          FROM T_DYNAMIC_CHART
+         WHERE ID = #{id}
+    </select>
+</mapper>

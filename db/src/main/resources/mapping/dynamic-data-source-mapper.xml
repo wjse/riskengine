@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.DynamicDataSourceMapper">
+
+    <sql id="select">
+        SELECT ID id,
+               NAME name,
+               DESCRIPTION description,
+               STATUS status,
+               TYPE type,
+               HOST host,
+               PORT port,
+               DB_NAME dbName,
+               DRIVER driver,
+               URL url ,
+               USERNAME username ,
+               password password,
+               PROPERTIES properties,
+               CREATOR creator,
+               CREATE_TIME createTime
+          FROM T_DYNAMIC_DATA_SOURCE
+    </sql>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.DynamicDataSource" databaseId="mysql">
+        INSERT INTO T_DYNAMIC_DATA_SOURCE (
+            NAME , DESCRIPTION , STATUS , TYPE , HOST , PORT , DB_NAME,
+            DRIVER , URL , USERNAME , PASSWORD , PROPERTIES,CREATOR,CREATE_TIME
+        ) VALUES (
+            #{name} , #{description} , #{status} , #{type}, #{host} , #{port} , #{dbName},
+            #{driver} , #{url} , #{username} , #{password} , #{properties},#{creator},#{createTime}
+        )
+    </insert>
+
+    <insert id="insert" parameterType="com.bamboocloud.risk.db.entity.DynamicDataSource" databaseId="oracle">
+        INSERT INTO T_DYNAMIC_DATA_SOURCE (
+            ID , NAME , DESCRIPTION , STATUS , TYPE , HOST , PORT , DB_NAME,
+            DRIVER , URL , USERNAME , PASSWORD , PROPERTIES,CREATOR,CREATE_TIME
+        ) VALUES (
+            T_DYNAMIC_DATA_SOURCE_SEQ.NEXTVAL , #{name} , #{description} , #{status} , #{type} , #{host} , #{port} , #{dbName},
+            #{driver} , #{url} , #{username} , #{password} , #{properties},#{creator},#{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.bamboocloud.risk.db.entity.DynamicDataSource">
+        UPDATE T_DYNAMIC_DATA_SOURCE
+           SET NAME = #{name},
+               DESCRIPTION = #{description},
+               STATUS = #{status},
+               TYPE = #{type},
+               HOST = #{host},
+               PORT = #{port},
+               DB_NAME = #{dbName},
+               DRIVER = #{driver},
+               URL = #{url} ,
+               USERNAME = #{username} ,
+               PASSWORD = #{password},
+               PROPERTIES = #{properties}
+         WHERE ID = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM T_DYNAMIC_DATA_SOURCE
+              WHERE ID = #{id}
+    </delete>
+
+    <select id="get" parameterType="int" resultType="com.bamboocloud.risk.db.entity.DynamicDataSource">
+        <include refid="select"/>
+         WHERE ID = #{id}
+    </select>
+
+    <select id="queryForList" parameterType="java.util.HashMap" resultType="com.bamboocloud.risk.db.entity.DynamicDataSource">
+        <include refid="select"/>
+        <where>
+            <trim prefixOverrides="AND || OR">
+                <if test="status != null">
+                    AND STATUS = #{status}
+                </if>
+                <if test="type != null">
+                    AND TYPE = #{type}
+                </if>
+                <if test="idList != null">
+                    AND ID IN
+                    <foreach collection="idList" open="(" close=")" separator="," item="id">
+                        #{id}
+                    </foreach>
+                </if>
+            </trim>
+        </where>
+    </select>
+</mapper>

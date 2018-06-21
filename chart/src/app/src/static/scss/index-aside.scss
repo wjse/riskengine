@@ -1,0 +1,103 @@
+@import "main";
+.sidebar {
+  width : 240px;
+  height : 100%;
+  background: #293949;
+  position: absolute;
+  -webkit-transition: all .3s ease-in-out;
+  -moz-transition: all .3s ease-in-out;
+  -o-transition: all .3s ease-in-out;
+  transition: all .3s ease-in-out;
+  z-index: 0;
+
+  .menu{
+    margin: -2px 0 0;
+    padding: 0;
+
+    li{
+      list-style-type: none;
+      border-bottom: 1px solid rgba(255,255,255,.05);
+
+      div{
+        color: #aeb2b7;
+        text-decoration: none;
+        display: block;
+        padding: 18px 0 18px 25px;
+        font-size: 14px;
+        outline: 0;
+        -webkit-transition: all 200ms ease-in;
+        -o-transition: all 200ms ease-in;
+        -moz-transition: all 200ms ease-in;
+        cursor: pointer;
+
+        span{
+          display: inline-block;
+          margin-left : 5px;
+          width : 100px;
+          white-space:nowrap;
+          overflow:hidden;
+          text-overflow:ellipsis;
+          line-height: 13px;
+          margin-top : 10px;
+
+          a{
+            color: #aeb2b7;
+          }
+
+          a:hover{
+            color: #1abc9c;
+          }
+        }
+
+        i{
+          width: 20px;
+        }
+
+        i.fa-angle-left,i.fa-angle-right{
+          padding-top: 3px;
+          margin-top:7px;
+        }
+
+        i.fa.pull-right{
+          margin-right:1em;
+        }
+      }
+    }
+  }
+
+  .children{
+    display: none;
+    margin-left:20px;
+
+    li:last-child{
+      border: none;
+    }
+  }
+
+  .menu .active>div{
+    color: #1abc9c;
+  }
+
+  .menu .active>.children{
+    display: block;
+  }
+
+  .menu div:hover{
+    color: #1abc9c;
+  }
+}
+
+.sidebar-toggle {
+  margin-left: -240px;
+}
+
+@media only screen and (max-width:660px) {
+  .sidebar-toggle {
+    margin-left: 0;
+    width: 100%
+  }
+
+  .sidebar {
+    margin-left: -240px
+  }
+}

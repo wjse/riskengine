@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="off" monitorInterval="1800">
+
+    <properties>
+        <property name="LOG_HOME">/app/engine</property>
+        <property name="LOG_FILE_NAME">engine</property>
+        <property name="ERROR_LOG_FILE_NAME">error</property>
+    </properties>
+
+
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss,SSS}:%4p %t (%F:%L) - %m%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="infoLog"
+                                 fileName="${LOG_HOME}/${LOG_FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/${LOG_FILE_NAME}-%i.log.%d{yyyy-MM-dd}.gz">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d %-5p (%F:%L) - %m%n"/>
+            <Policies>
+                <!--<TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="errorLog"
+                                 fileName="${LOG_HOME}/${ERROR_LOG_FILE_NAME}.log"
+                                 filePattern="${LOG_HOME}/${ERROR_LOG_FILE_NAME}-%i.log.%d{yyyy-MM-dd}.gz">
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d %-5p (%F:%L) - %m%n"/>
+            <Policies>
+                <!--<TimeBasedTriggeringPolicy/>-->
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- 3rdparty Loggers -->
+        <!--<logger name="org.springframework.core" level="info">-->
+        <!--</logger>-->
+        <!--<logger name="org.springframework.beans" level="info">-->
+        <!--</logger>-->
+        <!--<logger name="org.springframework.context" level="info">-->
+        <!--</logger>-->
+        <!--<logger name="org.springframework.web" level="info">-->
+        <!--</logger>-->
+        <!--<logger name="log4j.logger.org.mybatis" level="TRACE" additivity="false">-->
+            <!--<appender-ref ref="Console"/>-->
+        <!--</logger>-->
+
+        <root level="info" includeLocation="true">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="infoLog" />
+            <appender-ref ref="errorLog" />
+        </root>
+    </Loggers>
+</Configuration>

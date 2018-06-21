@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.StatisticsChartMapper">
+    <resultMap id="activeTimeQuantumMap" type="java.util.HashMap">
+        <result property="id" column="ID"></result>
+        <result property="time" column="TIME"></result>
+        <result property="count" column="COUNT"></result>
+        <result property="app" column="APP"></result>
+    </resultMap>
+
+    <resultMap id="ipPortrayalCountMap" type="java.util.HashMap">
+        <result property="id" column="ID"></result>
+        <result property="ip" column="USER_IP"></result>
+        <result property="count" column="COUNT"></result>
+        <result property="type" column="IP_TYPE"></result>
+    </resultMap>
+
+    <resultMap id="riskUserAccount" type="java.util.HashMap">
+        <result property="id" column="ID"/>
+        <result property="userId" column="USER_ID" />
+        <result property="type" column="TYPE" />
+        <result property="message" column="RISK_MESSAGE" />
+    </resultMap>
+
+    <select id="queryActiveTimeQuantum" resultMap="activeTimeQuantumMap">
+        SELECT *
+          FROM T_ACTIVE_TIME_QUANTUM
+        ORDER BY TIME ASC
+    </select>
+
+    <select id="queryIpPortrayalCount" parameterType="int" resultMap="ipPortrayalCountMap" databaseId="mysql">
+        SELECT *
+          FROM T_IP_PORTRAYAL_COUNT
+         WHERE IP_TYPE = #{type}
+      ORDER BY COUNT
+         LIMIT #{rowNum}
+    </select>
+
+    <select id="queryIpPortrayalCount" parameterType="int" resultMap="ipPortrayalCountMap" databaseId="oracle">
+        SELECT t.*
+          FROM (
+              SELECT *
+                FROM T_IP_PORTRAYAL_COUNT
+               WHERE IP_TYPE = #{type}
+               ORDER BY COUNT DESC
+          ) t
+         WHERE ROWNUM &lt;= #{rowNum}
+    </select>
+
+    <select id="queryUserRiskAccount" resultMap="riskUserAccount" >
+        SELECT *
+          FROM T_USER_RISK_ACCOUNT
+    </select>
+
+    <delete id="deleteUserRiskAccount" >
+        DELETE T_USER_RISK_ACCOUNT
+          WHERE ID = #{id}
+    </delete>
+</mapper>

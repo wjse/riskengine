@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bamboocloud.risk.db.mapper.RuleMapper">
+  <resultMap id="ruleMap" type="com.bamboocloud.risk.db.entity.Rule">
+    <result column="ID" property="id"></result>
+    <result column="NAME" property="name"></result>
+    <result column="TYPE" property="type"></result>
+    <result column="VALUE" property="value"></result>
+    <result column="STATUS" property="status"></result>
+    <result column="DESCRIPTION" property="description"></result>
+    <result column="MESSAGE" property="message"></result>
+    <result column="TIME" property="time"></result>
+  </resultMap>
+  <select id="queryForList" parameterType="map" resultMap="ruleMap">
+    SELECT *
+      FROM T_RULE
+    <where>
+      <trim prefixOverrides="AND || OR">
+        <if test="status != null">
+       AND STATUS = #{status}
+        </if>
+        <if test="type != null">
+       AND TYPE = #{type}
+        </if>
+      </trim>
+    </where>
+  </select>
+
+  <update id="update" parameterType="com.bamboocloud.risk.db.entity.Rule">
+      UPDATE T_RULE
+         SET NAME = #{name},
+             TYPE = #{type},
+             VALUE = #{value},
+             STATUS = #{status},
+             DESCRIPTION = #{description},
+             MESSAGE = #{message}
+         <if test="time != null">
+            ,TIME = #{time}
+         </if>
+      WHERE ID = #{id}
+  </update>
+
+  <insert id="saveCurrentRiskCount" parameterType="map" databaseId="mysql">
+      INSERT INTO T_CURRENT_RISK_COUNT (TYPE , COUNT , CREATE_TIME)
+            VALUES (#{type} , #{count} , #{createTime})
+  </insert>
+
+  <insert id="saveCurrentRiskCount" parameterType="map" databaseId="oracle">
+      INSERT INTO T_CURRENT_RISK_COUNT (ID,TYPE , COUNT , CREATE_TIME)
+            VALUES (T_CURRENT_RISK_COUNT_ID_SEQ.NEXTVAL , #{type} , #{count} , TO_CHAR(#{createTime},'yyyy-MM-dd'))
+  </insert>
+
+  <update id="updateCurrentRiskCount" parameterType="map" databaseId="mysql">
+      UPDATE T_CURRENT_RISK_COUNT
+         SET COUNT = #{count}
+       WHERE TYPE = #{type}
+         AND CREATE_TIME = DATE_FORMAT(#{createTime},'%Y-%m-%d')
+  </update>
+
+  <update id="updateCurrentRiskCount" parameterType="map" databaseId="oracle">
+      UPDATE T_CURRENT_RISK_COUNT
+         SET COUNT = #{count}
+       WHERE TYPE = #{type}
+         AND CREATE_TIME = TO_CHAR(#{createTime},'yyyy-MM-dd')
+  </update>
+
+  <select id="getCurrentRiskCount" parameterType="map" resultType="int" databaseId="mysql">
+      SELECT COUNT
+        FROM T_CURRENT_RISK_COUNT
+       WHERE TYPE = #{type}
+         AND CREATE_TIME = DATE_FORMAT(#{createTime},'%Y-%m-%d')
+  </select>
+
+  <select id="getCurrentRiskCount" parameterType="map" resultType="int" databaseId="oracle">
+      SELECT COUNT
+        FROM T_CURRENT_RISK_COUNT
+       WHERE TYPE = #{type}
+         AND CREATE_TIME = TO_CHAR(#{createTime},'yyyy-MM-dd')
+  </select>
+
+    <update id="addRuleRiskCount">
+        UPDATE t_rule_${type}_risk_count
+           SET COUNT = COUNT + 1
+         WHERE TYPE = 1
+           AND TIME = #{time}
+    </update>
+</mapper>

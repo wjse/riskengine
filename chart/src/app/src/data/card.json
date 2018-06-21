@@ -1,0 +1,30 @@
+[
+  {
+    "color": "red",
+    "icon": "unlock-alt",
+    "name": "当前密码风险",
+    "type": "PASSWORD",
+    "count": 0
+  },
+  {
+    "color": "turquoise",
+    "icon": "location-arrow",
+    "name": "当前常用IP地址风险",
+    "type": "IP",
+    "count": 0
+  },
+  {
+    "color": "blue",
+    "icon": "map-marker",
+    "name": "当前常用地点风险",
+    "type": "CITY",
+    "count": 0
+  },
+  {
+    "color": "purple",
+    "icon": "desktop",
+    "name": "当前常用设备风险",
+    "type": "DEVICE",
+    "count": 0
+  }
+]

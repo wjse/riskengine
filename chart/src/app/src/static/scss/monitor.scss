@@ -1,0 +1,15 @@
+@import "main";
+
+.monitor{
+  padding-top: 30px;
+
+  .table{
+    .fa-check-circle{
+      color: green;
+    }
+
+    .fa-exclamation-triangle{
+      color: red;
+    }
+  }
+}
