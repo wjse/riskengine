@@ -15,8 +15,6 @@
         <module>support</module>
         <module>user</module>
         <module>db</module>
-        <module>task</module>
-		<module>spark</module>
     </modules>
 
     <build>
